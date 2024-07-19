@@ -18,6 +18,10 @@ const Cart = () => {
     console.log("Cancel button clicked");
     usrctx.hideCart();
   }
+
+  function handleCheckoutBtn() {
+    usrctx.showCheckout();
+  }
   return (
     <Modal open={usrctx.progress === "cart"} classname="cart">
       <h2>Your Cart</h2>
@@ -31,7 +35,9 @@ const Cart = () => {
         <Button txtOnly onClick={handleCloseBtn}>
           Close
         </Button>
-        {items.length > 0 && <Button>Checkout</Button>}
+        {items.length > 0 && (
+          <Button onClick={handleCheckoutBtn}>Checkout</Button>
+        )}
       </p>
     </Modal>
   );
