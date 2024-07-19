@@ -4,6 +4,7 @@ import "../index.css";
 import CartContext from "../store/CartContext";
 import Button from "./UI/Button";
 import { UserProgressContext } from "../store/UserProgressContext";
+import CartItem from "./CartItem";
 
 const Cart = () => {
   const { addItem, removeItem, items } = useContext(CartContext);
@@ -16,16 +17,13 @@ const Cart = () => {
   function handleCloseBtn() {
     console.log("Cancel button clicked");
     usrctx.hideCart();
-    console.log(usrctx);
   }
   return (
     <Modal open={usrctx.progress === "cart"} classname="cart">
       <h2>Your Cart</h2>
       <ul>
         {items.map((eachItem) => (
-          <li key={eachItem.id}>
-            {eachItem.name} - {eachItem.quantity}
-          </li>
+          <CartItem key={eachItem.id} eachItem={eachItem} />
         ))}
       </ul>
       <p className="cart-total">${cartTotal}</p>
@@ -33,7 +31,7 @@ const Cart = () => {
         <Button txtOnly onClick={handleCloseBtn}>
           Close
         </Button>
-        <Button>Checkout</Button>
+        {items.length > 0 && <Button>Checkout</Button>}
       </p>
     </Modal>
   );

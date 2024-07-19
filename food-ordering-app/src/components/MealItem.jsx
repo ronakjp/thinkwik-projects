@@ -8,7 +8,7 @@ const MealItem = ({ mealDetails }) => {
   function handleAddToCart(meal) {
     addItem(meal);
   }
-  console.log(items);
+
   return (
     <li className="meal-item">
       <article>

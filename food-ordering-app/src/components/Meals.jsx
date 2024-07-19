@@ -14,8 +14,6 @@ const Meals = () => {
         }
         const data = await first_response.json();
         setMealsArr(data);
-
-        console.log(data);
       } catch (err) {
         setError(err.message);
 

@@ -47,20 +47,34 @@ function reducer(state, action) {
 
     return { ...state, items: updatedItems };
   } else if (action.type === "DELETE_ITEM") {
-    //find the index
-    const itemIndex = state.items.findIndex(
-      (item) => item.id === action.items.id
-    );
-    //action.items is array of objects. each object containing item and the added quantity value
-    const item = state.items[itemIndex];
-    let tempItemArr = [...state.items];
-    if (item.quantity === 1) {
-      tempItemArr.splice(itemIndex, 1);
-    } else {
-      tempItemArr[itemIndex].quantity = tempItemArr[itemIndex].quantity - 1;
-    }
+    // //find the index
+    console.log("state.items", state.items);
+    // const itemIndex = state.items.findIndex((item) => item.id === action.id);
 
-    return { ...state, items: tempItemArr };
+    // //action.items is array of objects. each object containing item and the added quantity value
+    // const item = state.items[itemIndex];
+    // let tempItemArr = [...state.items];
+    // if (item.quantity === 1) {
+    //   tempItemArr.splice(itemIndex, 1);
+    // } else {
+    //   tempItemArr[itemIndex].quantity = tempItemArr[itemIndex].quantity - 1;
+    // }
+    // console.log("tempItemArr", tempItemArr);
+    // return { ...state, items: tempItemArr };
+    //CHATGPT
+    const itemIndex = state.items.findIndex((item) => item.id === action.id);
+    if (itemIndex === -1) return state; // Item not found
+
+    const updatedItems = [...state.items];
+    if (updatedItems[itemIndex].quantity === 1) {
+      updatedItems.splice(itemIndex, 1);
+    } else {
+      updatedItems[itemIndex] = {
+        ...updatedItems[itemIndex],
+        quantity: updatedItems[itemIndex].quantity - 1,
+      };
+    }
+    return { ...state, items: updatedItems };
   } else return state;
 }
 
