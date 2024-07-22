@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "../index.css";
 import MealItem from "./MealItem";
+
 const Meals = () => {
   const [mealsArr, setMealsArr] = useState([]);
   const [error, setError] = useState("");
-  useEffect(() => {
-    async function fetchMealItems() {
-      try {
-        const first_response = await fetch("http://localhost:3000/meals");
 
-        if (!first_response.ok) {
-          throw new Error("Error in getting the response from the server");
-        }
-        const data = await first_response.json();
-        setMealsArr(data);
-      } catch (err) {
-        setError(err.message);
+  async function fetchMealItems() {
+    try {
+      const first_response = await fetch("http://localhost:3000/meals");
 
-        console.log(err);
+      if (!first_response.ok) {
+        throw new Error("Error in getting the response from the server");
       }
+      const data = await first_response.json();
+      setMealsArr(data);
+    } catch (err) {
+      setError(err.message);
+
+      console.log(err);
     }
+  }
+  useEffect(() => {
     fetchMealItems();
   }, []);
 

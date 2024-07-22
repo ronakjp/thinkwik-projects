@@ -24,10 +24,26 @@ const Checkout = () => {
     contx.hideCheckout();
   }
 
+  function sendOrderToBackend(custData) {
+    fetch("http://localhost:3000/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        order: {
+          items: items,
+          customer: custData,
+        },
+      }),
+    });
+  }
+
   return (
     <Modal open={contx.progress === "checkout"}>
       <form
         onSubmit={handleSubmit((data) => {
+          sendOrderToBackend(data);
           console.log("data is ", data);
           contx.hideCheckout();
         })}
