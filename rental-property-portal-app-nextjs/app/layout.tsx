@@ -1,5 +1,6 @@
 import React from "react";
 import "@/app/globals.css";
+import NavBar from "@/components/NavBar";
 
 export const metadata = {
   title: "PropertyHub | Find the perfect rental ",
@@ -10,7 +11,10 @@ export const metadata = {
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="en">
-      <body>{children}</body>
+          <body>
+              <NavBar/>
+        <main>{children}</main>
+      </body>
     </html>
   );
 };
