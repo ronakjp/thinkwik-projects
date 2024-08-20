@@ -1,9 +1,7 @@
 import React from "react";
 import properties from "@/properties.json";
 import PropertyCard from "@/components/PropertyCard";
-const PropertiesPage = () => {
-  console.log("length is ", properties.length);
-
+const PropertiesPage: React.FC = () => {
   return (
     <section className="px-4 py-6">
       <div className="container-xl lg:container m-auto px-4 py-6">
