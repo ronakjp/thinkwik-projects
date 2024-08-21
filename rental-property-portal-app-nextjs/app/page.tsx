@@ -7,7 +7,7 @@ export const metadata = {
   title: "HomePage of the protal",
 };
 
-const HomePage: React.FC = () => {
+const HomePage: React.FC = async () => {
   return (
     <>
       <Hero />
