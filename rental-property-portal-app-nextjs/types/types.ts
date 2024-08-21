@@ -17,7 +17,7 @@ type SellerInfo = {
   phone: string;
 };
 
-export type Property = {
+export type TypeProperty = {
   _id: string;
   owner: string;
   name: string;
@@ -36,4 +36,4 @@ export type Property = {
   updatedAt: string;
 };
 
-export type Properties = Property[];
+export type Properties = TypeProperty[];
