@@ -17,7 +17,7 @@ const override: CSSProperties = {
   display: "block",
 };
 
-const Loading: React.FC = () => {
+export const Loading: React.FC = () => {
   return (
     <div style={containerStyle}>
       <GridLoader cssOverride={override} color="#3b82f6" />

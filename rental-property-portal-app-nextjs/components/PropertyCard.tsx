@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import { Property } from "@/types/types";
+import { TypeProperty } from "@/types/types";
 import Link from "next/link";
 import {
   FaBed,
@@ -9,7 +9,7 @@ import {
   FaMoneyBill,
   FaMapMarker,
 } from "react-icons/fa";
-const PropertyCard: React.FC<{ eachProperty: Property }> = ({
+const PropertyCard: React.FC<{ eachProperty: TypeProperty }> = ({
   eachProperty,
 }) => {
   return (
@@ -44,11 +44,17 @@ const PropertyCard: React.FC<{ eachProperty: Property }> = ({
         <div className="flex justify-center gap-4 text-gray-500 mb-4">
           <p>
             <FaBed className="inline mr-2" /> {eachProperty.beds}
-            <span className="md:hidden lg:inline">Beds</span>
+            <span className="  md:hidden lg:inline">
+              {" "}
+              {eachProperty.beds > 1 ? "Beds" : "Bed"}
+            </span>
           </p>
           <p>
             <FaBath className="inline mr-2" /> {eachProperty.baths}
-            <span className="md:hidden lg:inline">Baths</span>
+            <span className="md:hidden lg:inline">
+              {" "}
+              {eachProperty.baths > 1 ? "Baths" : "Bath"}
+            </span>
           </p>
           <p>
             <FaRulerCombined className="inline mr-2" />
