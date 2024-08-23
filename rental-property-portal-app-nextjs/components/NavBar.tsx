@@ -5,15 +5,38 @@ import logo from "@/assets/images/logo-white.png";
 import profileDefault from "@/assets/images/profile.png";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import {
+  signIn,
+  signOut,
+  useSession,
+  getProviders,
+  ClientSafeProvider,
+  LiteralUnion,
+} from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers/index";
 
 const Navbar: React.FC = () => {
+  const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [providers, setProviders] = useState<Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null>(null);
+
   const currPath = usePathname();
 
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders();
+      console.log("getProviders res ", res);
+      setProviders(res);
+    };
+    setAuthProviders();
+  }, []);
+  console.log("Printing provider obj ", providers);
   return (
     <nav className="bg-blue-700 border-b border-blue-500">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -78,7 +101,7 @@ const Navbar: React.FC = () => {
                   Properties
                 </Link>
 
-                {isLoggedIn && (
+                {session && (
                   <Link
                     href="/properties/add"
                     className={`${
@@ -93,19 +116,30 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* <!-- Right Side Menu (Logged Out) --> */}
-          {!isLoggedIn && (
+          {!session && (
             <div className="hidden md:block md:ml-6">
               <div className="flex items-center">
-                <button className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
-                  <FaGoogle className="text-white mr-2 " />
-                  <span>Login or Register</span>
-                </button>
+                {providers &&
+                  Object.values(providers).map((provider) => {
+                    return (
+                      <button
+                        onClick={() => signIn(provider.id)}
+                        key={provider.id}
+                        className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                      >
+                        {provider.id === "google" && (
+                          <FaGoogle className="text-white mr-2 " />
+                        )}
+                        <span>Login or Register</span>
+                      </button>
+                    );
+                  })}
               </div>
             </div>
           )}
           {/* <!-- Right Side Menu (Logged In) --> */}
 
-          {isLoggedIn && (
+          {session && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
               <a href="messages.html" className="relative group">
                 <button
@@ -222,7 +256,7 @@ const Navbar: React.FC = () => {
           >
             Properties
           </Link>
-          {isLoggedIn && (
+          {session && (
             <Link
               href="/properties/add"
               className={`${
@@ -232,7 +266,7 @@ const Navbar: React.FC = () => {
               Add Property
             </Link>
           )}
-          {!isLoggedIn && (
+          {!session && (
             <button className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4">
               <FaGoogle className=" mr-2" />
               <span>Login or Register</span>

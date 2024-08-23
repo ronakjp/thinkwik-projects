@@ -8,8 +8,8 @@ interface GoogleProfile extends Profile {
 export const authOptions: AuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_ID!,
-      clientSecret: process.env.GOOGLE_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
           prompt: "consent",
@@ -20,25 +20,17 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ profile,}: {profile?: GoogleProfile | null;}) {
-          
-          //1. connect to the db
-          //2.check if user exists
-          //3.if not add user to db
-          //4. return true to allow the signin
+    async signIn({ profile }: { profile?: GoogleProfile | null }) {
+      //1. connect to the db
+      //2.check if user exists
+      //3.if not add user to db
+      //4. return true to allow the signin
+    },
 
-
-     
-      },
-
-      async session({ session }) {
-          //1. get the user from db
-          //2. Assign the uid to session
-          //3.return session    
-      }
-     
+    async session({ session }) {
+      //1. get the user from db
+      //2. Assign the uid to session
+      //3.return session
     },
   },
 };
-
-
