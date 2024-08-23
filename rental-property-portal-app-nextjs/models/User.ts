@@ -15,7 +15,6 @@ const UserSchema = new Schema(
 
     image: {
       type: String,
-      required: false, // Explicitly mark this as not required (optional)
     },
 
     bookmarks: {

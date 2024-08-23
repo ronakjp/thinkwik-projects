@@ -1,3 +1,6 @@
+import { ObjectId } from "mongodb";
+import { Date } from "mongoose";
+import { DefaultSession } from "next-auth";
 type PropertyLocation = {
   street: string;
   city: string;
@@ -37,3 +40,22 @@ export type TypeProperty = {
 };
 
 export type Properties = TypeProperty[];
+
+//schema of the each user fetched from the DB
+export type DbEachUser = {
+  _id: ObjectId;
+  email: string;
+  username: string;
+  image: string;
+  bookmarks: [ObjectId];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+//extending the existing session and adding the id property. it will be set to user id from db.
+
+export interface CustomSession extends DefaultSession {
+  user: DefaultSession["user"] & {
+    id: string;
+  };
+}

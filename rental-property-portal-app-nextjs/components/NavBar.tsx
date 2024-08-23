@@ -19,6 +19,9 @@ import { BuiltInProviderType } from "next-auth/providers/index";
 
 const Navbar: React.FC = () => {
   const { data: session } = useSession();
+
+  const profileImage = session?.user?.image;
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState<boolean>(false);
   const [providers, setProviders] = useState<Record<
@@ -183,7 +186,9 @@ const Navbar: React.FC = () => {
                     <span className="sr-only">Open user menu</span>
                     <Image
                       className="h-8 w-8 rounded-full"
-                      src={profileDefault}
+                      src={profileImage ? profileImage : profileDefault}
+                      width={500}
+                      height={500}
                       alt=""
                     />
                   </button>
@@ -266,12 +271,21 @@ const Navbar: React.FC = () => {
               Add Property
             </Link>
           )}
-          {!session && (
-            <button className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4">
-              <FaGoogle className=" mr-2" />
-              <span>Login or Register</span>
-            </button>
-          )}
+
+          {!session &&
+            providers &&
+            Object.values(providers).map((provider) => {
+              return (
+                <button
+                  onClick={() => signIn(provider.id)}
+                  key={provider.id}
+                  className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-4"
+                >
+                  {provider.id === "google" && <FaGoogle className=" mr-2 " />}
+                  <span>Login or Register</span>
+                </button>
+              );
+            })}
         </div>
       </div>
     </nav>
