@@ -16,7 +16,7 @@ const PropertyCard: React.FC<{ eachProperty: TypeProperty }> = ({
     <div className="rounded-xl shadow-md relative">
       {eachProperty.images[0] && (
         <Image
-          src={`/images/properties/${eachProperty.images[0]}`}
+          src={eachProperty.images[0]}
           width={0}
           height={0}
           priority
@@ -25,7 +25,7 @@ const PropertyCard: React.FC<{ eachProperty: TypeProperty }> = ({
           className="w-full h-auto rounded-t-xl"
         />
       )}
-      
+
       <div className="p-4">
         <div className="text-left md:text-center lg:text-left mb-6">
           <div className="text-gray-600">{eachProperty.type}</div>

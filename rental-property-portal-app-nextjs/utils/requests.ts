@@ -11,7 +11,13 @@ export async function fetchProperties(): Promise<Properties> {
     }
 
     const res: AxiosResponse<Properties> = await axios.get(
-      `${apiDomain}/properties`
+      `${apiDomain}/properties`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        }
+    }
     );
     return res.data;
   } catch (err) {

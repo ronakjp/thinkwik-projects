@@ -4,6 +4,7 @@ import Map from "./Map";
 import PropertyInfo from "./PropertyInfo";
 import SideBar from "./SideBar";
 import { TypeProperty } from "@/types/types";
+import PropertyImages from "./PropertyImages";
 
 type Props = {
   currentProperty: TypeProperty;
@@ -22,6 +23,8 @@ const PropertyInfoSection: React.FC<Props> = ({ currentProperty }) => {
           </div>
         </div>
       </section>
+
+      <PropertyImages images={currentProperty.images} />
     </>
   );
 };

@@ -54,6 +54,7 @@ const SinglePropertyPage = () => {
             </div>
           </section>
           <PropertyInfoSection currentProperty={property} />
+          
         </>
       )}
     </>
