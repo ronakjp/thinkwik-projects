@@ -1,4 +1,7 @@
 import { Schema, model, models } from "mongoose";
+import { Document, Types } from "mongoose";
+
+// Define the Mongoose document interface for the Property schema
 
 const locationSchema = new Schema({
   street: {
@@ -88,6 +91,7 @@ const propertySchema = new Schema(
 
     images: {
       type: [String],
+      required: true,
     },
     is_featured: {
       type: Boolean,
@@ -96,7 +100,6 @@ const propertySchema = new Schema(
   },
   { timestamps: true }
 );
-
 const Property = models.Property || model("Property", propertySchema);
 
 export default Property;

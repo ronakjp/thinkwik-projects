@@ -211,6 +211,9 @@ const Navbar: React.FC = () => {
                       role="menuitem"
                       tabIndex={-1}
                       id="user-menu-item-0"
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                      }}
                     >
                       Your Profile
                     </Link>
@@ -220,6 +223,9 @@ const Navbar: React.FC = () => {
                       role="menuitem"
                       tabIndex={-1}
                       id="user-menu-item-2"
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                      }}
                     >
                       Saved Properties
                     </Link>
@@ -228,6 +234,10 @@ const Navbar: React.FC = () => {
                       role="menuitem"
                       tabIndex={-1}
                       id="user-menu-item-2"
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        signOut();
+                      }}
                     >
                       Sign Out
                     </button>
@@ -249,7 +259,7 @@ const Navbar: React.FC = () => {
             href="/"
             className={`${
               currPath === "/" ? "bg-black" : undefined
-            } bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium`}
+            }  text-white block rounded-md px-3 py-2 text-base font-medium`}
           >
             Home
           </Link>

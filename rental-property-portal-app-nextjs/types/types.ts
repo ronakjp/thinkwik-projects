@@ -21,7 +21,6 @@ type SellerInfo = {
 };
 
 export type TypeProperty = {
-  _id: string;
   owner: string;
   name: string;
   type: string;
@@ -33,7 +32,7 @@ export type TypeProperty = {
   amenities: string[];
   rates: Rates;
   seller_info: SellerInfo;
-  images: string[];
+  images: [File];
   is_featured: boolean;
   createdAt: string;
   updatedAt: string;
@@ -59,3 +58,33 @@ export interface CustomSession extends DefaultSession {
     id: string;
   };
 }
+
+//add property form types
+
+export type AddPropertyFormType = {
+  propType: string;
+  propTitleName: string;
+  propDescription: string;
+  propLocation: {
+    propStreet: string;
+    propCity: string;
+    propState: string;
+    propZipcode: string;
+  };
+  propBeds: number;
+  propBaths: number;
+  propSquareFeet: number;
+  propAmenities: [string];
+  propRates: {
+    Weekly?: number;
+    Monthly?: number;
+    Nightly?: number;
+  };
+  propSellerInfo: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  owner: string;
+  propsImages: [File];
+};

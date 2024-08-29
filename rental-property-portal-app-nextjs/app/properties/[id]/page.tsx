@@ -22,7 +22,6 @@ const SinglePropertyPage = () => {
       try {
         const property = await fetchSingleProperty(id);
         setProperty(property);
-        console.log("fetched prop is ", property);
       } catch (error) {
         console.log("Error in fetching single property.");
       } finally {

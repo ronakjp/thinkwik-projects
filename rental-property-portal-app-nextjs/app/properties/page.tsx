@@ -5,6 +5,7 @@ import { fetchProperties } from "@/utils/requests";
 
 const PropertiesPage: React.FC = async () => {
   const properties = await fetchProperties();
+
   return (
     <section className="px-4 py-6">
       <div className="container-xl lg:container m-auto px-4 py-6">

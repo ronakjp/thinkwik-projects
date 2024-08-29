@@ -19,8 +19,9 @@ export const connectDB = async () => {
     connected = true;
 
     console.log("Connected Successfully to DB");
-  } catch (err) {}
+  } catch (err) {
+    console.log(
+      "[PROBLEM IN DB CONNECTION] Can not established the connection to the DB"
+    );
+  }
 };
-
-
-

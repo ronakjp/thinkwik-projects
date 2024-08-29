@@ -13,7 +13,6 @@ export const GET = async (
     await connectDB();
 
     const property = await Property.findById(params.id);
-    console.log("Server side data fetched ", property);
 
     if (!property) {
       return new NextResponse("Property Not Found", { status: 404 });
