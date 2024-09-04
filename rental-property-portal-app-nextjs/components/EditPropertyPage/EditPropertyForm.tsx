@@ -1,54 +1,93 @@
 "use client";
 import { AddPropertyFormType } from "@/types/types";
+import { fetchSingleProperty } from "@/utils/requests";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
 
-const AddPropertyForm = () => {
+const EditPropertyForm = () => {
   const router = useRouter();
+  const { id }: { id: string } = useParams();
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<AddPropertyFormType>();
+  } = useForm({
+    defaultValues: {
+      amenities: [], // Initialize as an empty array
+    },
+  });
+
+  useEffect(() => {
+    const fetchPropData = async () => {
+      try {
+        const propData = await fetchSingleProperty(id);
+        console.log("propData", propData);
+
+        // Populate the form fields
+        // Set all other fields
+        Object.keys(propData).forEach((key) => {
+          if (key !== "amenities") {
+            if (
+              typeof propData[key] === "object" &&
+              !Array.isArray(propData[key])
+            ) {
+              Object.keys(propData[key]).forEach((nestedKey) => {
+                setValue(`${key}.${nestedKey}`, propData[key][nestedKey]);
+              });
+            } else {
+              setValue(key, propData[key]);
+            }
+          }
+        });
+
+        // Set amenities (array)
+        setValue("amenities", propData.amenities);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchPropData();
+  }, [setValue]);
 
   const onSubmit: SubmitHandler<AddPropertyFormType> = async (data) => {
     console.log("Form data is ", data);
+    console.log("Passed Property ID", id);
     try {
-      const response = await axios.post("/api/properties", data, {
+      const response = await axios.put(`/api/properties/${id}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log("response stat ", response.status);
 
-      console.log("Response after submitting the form ", response);
+      if (response.status === 401) {
+        console.log("inside 401");
 
+        toast.error("Permission Denied");
+      }
       if (response.status === 200) {
-        const { newPropertyID } = response.data;
-
         // Redirecting to /properties/[objectID]
-
-        router.push(`/properties/${newPropertyID}`);
+        toast.success("Record Updated Successfully");
+        router.push(`/properties/${id}`);
       } else {
-        console.error("Failed to submit the form");
+        toast.error("Something Went Wrong");
       }
     } catch (error) {
+     
       console.error("Error submitting the form:", error);
     }
   };
   return (
     <>
-      <form
-        // action="/api/properties"
-        // method="POST"
-        onSubmit={handleSubmit(onSubmit)}
-        //   this is for allowing images to be UPLOADED
-        encType="multipart/form-data"
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <h2 className="text-3xl text-center font-semibold mb-6">
-          Add Property
+          Edit Property
         </h2>
 
         <div className="mb-4">
@@ -57,7 +96,7 @@ const AddPropertyForm = () => {
           </label>
           <select
             id="type"
-            {...register("propType")}
+            {...register("type")}
             className="border rounded w-full py-2 px-3"
             required
           >
@@ -80,7 +119,7 @@ const AddPropertyForm = () => {
           <input
             type="text"
             id="propTitleName"
-            {...register("propTitleName")}
+            {...register("name")}
             className="border rounded w-full py-2 px-3 mb-2"
             placeholder="eg. Beautiful Apartment In Miami"
             required
@@ -95,7 +134,7 @@ const AddPropertyForm = () => {
           </label>
           <textarea
             id="description"
-            {...register("propDescription")}
+            {...register("description")}
             className="border rounded w-full py-2 px-3"
             rows={4}
             placeholder="Add an optional description of your property"
@@ -106,27 +145,27 @@ const AddPropertyForm = () => {
           <label className="block text-gray-700 font-bold mb-2">Location</label>
           <input
             type="text"
-            {...register("propLocation.propStreet")}
+            {...register("location.street")}
             className="border rounded w-full py-2 px-3 mb-2"
             placeholder="Street"
           />
           <input
             type="text"
-            {...register("propLocation.propCity")}
+            {...register("location.city")}
             className="border rounded w-full py-2 px-3 mb-2"
             placeholder="City"
             required
           />
           <input
             type="text"
-            {...register("propLocation.propState")}
+            {...register("location.state")}
             className="border rounded w-full py-2 px-3 mb-2"
             placeholder="State"
             required
           />
           <input
             type="text"
-            {...register("propLocation.propZipcode")}
+            {...register("location.zipcode")}
             className="border rounded w-full py-2 px-3 mb-2"
             placeholder="Zipcode"
           />
@@ -143,7 +182,7 @@ const AddPropertyForm = () => {
             <input
               type="number"
               id="beds"
-              {...register("propBeds")}
+              {...register("beds")}
               className="border rounded w-full py-2 px-3"
               required
             />
@@ -158,7 +197,7 @@ const AddPropertyForm = () => {
             <input
               type="number"
               id="baths"
-              {...register("propBaths")}
+              {...register("baths")}
               className="border rounded w-full py-2 px-3"
               required
             />
@@ -173,7 +212,7 @@ const AddPropertyForm = () => {
             <input
               type="number"
               id="square_feet"
-              {...register("propSquareFeet")}
+              {...register("square_feet")}
               className="border rounded w-full py-2 px-3"
               required
             />
@@ -189,7 +228,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_wifi"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Wifi"
                 className="mr-2"
               />
@@ -199,7 +238,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_kitchen"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Full kitchen"
                 className="mr-2"
               />
@@ -209,7 +248,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_washer_dryer"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Washer & Dryer"
                 className="mr-2"
               />
@@ -219,7 +258,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_free_parking"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Free Parking"
                 className="mr-2"
               />
@@ -229,7 +268,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_pool"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Swimming Pool"
                 className="mr-2"
               />
@@ -239,7 +278,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_hot_tub"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Hot Tub"
                 className="mr-2"
               />
@@ -249,7 +288,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_24_7_security"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="24/7 Security"
                 className="mr-2"
               />
@@ -259,7 +298,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_wheelchair_accessible"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Wheelchair Accessible"
                 className="mr-2"
               />
@@ -271,7 +310,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_elevator_access"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Elevator Access"
                 className="mr-2"
               />
@@ -281,7 +320,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_dishwasher"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Dishwasher"
                 className="mr-2"
               />
@@ -291,7 +330,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_gym_fitness_center"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Gym/Fitness Center"
                 className="mr-2"
               />
@@ -303,7 +342,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_air_conditioning"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Air Conditioning"
                 className="mr-2"
               />
@@ -313,7 +352,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_balcony_patio"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Balcony/Patio"
                 className="mr-2"
               />
@@ -323,7 +362,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_smart_tv"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Smart TV"
                 className="mr-2"
               />
@@ -333,7 +372,7 @@ const AddPropertyForm = () => {
               <input
                 type="checkbox"
                 id="amenity_coffee_maker"
-                {...register("propAmenities")}
+                {...register("amenities")}
                 value="Coffee Maker"
                 className="mr-2"
               />
@@ -343,7 +382,9 @@ const AddPropertyForm = () => {
         </div>
 
         <div className="mb-4 bg-blue-50 p-4">
-          <label className="block text-gray-700 font-bold mb-2">Rates</label>
+          <label className="block text-gray-700 font-bold mb-2">
+            Rates (Leave blank if not applicable)
+          </label>
           <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
             <div className="flex items-center">
               <label htmlFor="weekly_rate" className="mr-2">
@@ -352,7 +393,7 @@ const AddPropertyForm = () => {
               <input
                 type="number"
                 id="weekly_rate"
-                {...register("propRates.Weekly")}
+                {...register("rates.weekly")}
                 className="border rounded w-full py-2 px-3"
               />
             </div>
@@ -363,7 +404,7 @@ const AddPropertyForm = () => {
               <input
                 type="number"
                 id="monthly_rate"
-                {...register("propRates.Monthly")}
+                {...register("rates.monthly")}
                 className="border rounded w-full py-2 px-3"
               />
             </div>
@@ -374,7 +415,7 @@ const AddPropertyForm = () => {
               <input
                 type="number"
                 id="nightly_rate"
-                {...register("propRates.Nightly")}
+                {...register("rates.nightly")}
                 className="border rounded w-full py-2 px-3"
               />
             </div>
@@ -391,7 +432,7 @@ const AddPropertyForm = () => {
           <input
             type="text"
             id="seller_name"
-            {...register("propSellerInfo.name")}
+            {...register("seller_info.name")}
             className="border rounded w-full py-2 px-3"
             placeholder="Name"
           />
@@ -406,7 +447,7 @@ const AddPropertyForm = () => {
           <input
             type="email"
             id="seller_email"
-            {...register("propSellerInfo.email")}
+            {...register("seller_info.email")}
             className="border rounded w-full py-2 px-3"
             placeholder="Email address"
             required
@@ -422,28 +463,10 @@ const AddPropertyForm = () => {
           <input
             type="tel"
             id="seller_phone"
-            {...register("propSellerInfo.phone")}
+            {...register("seller_info.phone")}
             className="border rounded w-full py-2 px-3"
             placeholder="Phone"
             disabled={isSubmitting}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="images"
-            className="block text-gray-700 font-bold mb-2"
-          >
-            Images (Select up to 4 images)
-          </label>
-          <input
-            type="file"
-            id="images"
-            {...register("propsImages")}
-            className="border rounded w-full py-2 px-3"
-            accept="image/*"
-            multiple
-            required
           />
         </div>
 
@@ -474,7 +497,7 @@ const AddPropertyForm = () => {
                 <span className="sr-only">Loading...</span>
               </>
             )}
-            Add Property
+            Edit Property
           </button>
         </div>
       </form>
@@ -482,4 +505,4 @@ const AddPropertyForm = () => {
   );
 };
 
-export default AddPropertyForm;
+export default EditPropertyForm;

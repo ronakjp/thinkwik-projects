@@ -27,7 +27,7 @@ export default async function extractFormData(
         : undefined,
       monthly: formData.get("propRates[Monthly]")
         ? parseInt(formData.get("propRates[Monthly]") as string, 10)
-        : undefined,          
+        : undefined,
       nightly: formData.get("propRates[Nightly]")
         ? parseInt(formData.get("propRates[Nightly]") as string, 10)
         : undefined,

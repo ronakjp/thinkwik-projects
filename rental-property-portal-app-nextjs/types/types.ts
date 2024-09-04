@@ -51,8 +51,9 @@ export type DbEachUser = {
   updatedAt: Date;
 };
 
-//extending the existing session and adding the id property. it will be set to user id from db.
 
+
+//extending the existing session and adding the id property. it will be set to user id from db.
 export interface CustomSession extends DefaultSession {
   user: DefaultSession["user"] & {
     id: string;
